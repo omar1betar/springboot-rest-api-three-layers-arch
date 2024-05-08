@@ -3,6 +3,7 @@ package net.javaguides.springboot.service;
 import lombok.AllArgsConstructor;
 import net.javaguides.springboot.dto.UserDto;
 import net.javaguides.springboot.entity.User;
+import net.javaguides.springboot.mapper.AutoUserMapper;
 import net.javaguides.springboot.mapper.UserMapper;
 import net.javaguides.springboot.repository.IUserRepository;
 import org.modelmapper.ModelMapper;
@@ -27,7 +28,10 @@ public class UserService implements IUserService{
         //User user = UserMapper.mapToUser(userDto);
         //-----
         //Model Mapper
-        User user = modelMapper.map(userDto, User.class);
+        //User user = modelMapper.map(userDto, User.class);
+        //----
+        //map struct
+        User user = AutoUserMapper.MAPPER.mapToUser(userDto);
 
         User savedUser = userRepository.save(user);
         //Convert User Into UserDto to return it (to return the id )
@@ -35,7 +39,10 @@ public class UserService implements IUserService{
         //UserDto savedUserDto = UserMapper.mapToUserDto(savedUser);
         //------
         //model mapper
-        UserDto savedUserDto = modelMapper.map(savedUser, UserDto.class);
+        //UserDto savedUserDto = modelMapper.map(savedUser, UserDto.class);
+        //-------
+        //map struct
+        UserDto savedUserDto = AutoUserMapper.MAPPER.mapToUserDto(savedUser);
 
 
         return savedUserDto;
@@ -48,7 +55,10 @@ public class UserService implements IUserService{
         //return  UserMapper.mapToUserDto(optionalUser.get());
         //-----
         //model mapper
-        return  modelMapper.map(optionalUser,UserDto.class);
+        //return  modelMapper.map(optionalUser,UserDto.class);
+        //-----
+        //map struct
+        return  AutoUserMapper.MAPPER.mapToUserDto(optionalUser.get());
 
 
     }
@@ -61,8 +71,11 @@ public class UserService implements IUserService{
          //       .collect(Collectors.toList());
         //------
         //model mapper
-        return  users.stream().map((user)->modelMapper.map(user,UserDto.class))
-                .collect(Collectors.toList());
+        //return  users.stream().map((user)->modelMapper.map(user,UserDto.class))
+          //      .collect(Collectors.toList());
+        //------
+        //map struct
+        return  users.stream().map(AutoUserMapper.MAPPER::mapToUserDto).collect(Collectors.toList());
     }
 
     @Override
@@ -75,7 +88,11 @@ public class UserService implements IUserService{
         //manual mapping
         //return UserMapper.mapToUserDto(updatedUser);
         //----
-        return modelMapper.map(updatedUser,UserDto.class);
+        //model mapper
+       // return modelMapper.map(updatedUser,UserDto.class);
+        //-----
+        //map struct
+        return AutoUserMapper.MAPPER.mapToUserDto(updatedUser);
     }
 
     @Override
