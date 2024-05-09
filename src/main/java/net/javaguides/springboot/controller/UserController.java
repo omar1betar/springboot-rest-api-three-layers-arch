@@ -1,5 +1,8 @@
 package net.javaguides.springboot.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import net.javaguides.springboot.dto.UserDto;
@@ -13,7 +16,10 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+@Tag(
+        name = "CRUD REST API for User",
+        description = "create,update,getById,getAllUsers,delete"
+)
 @RestController
 @AllArgsConstructor
 @RequestMapping("api/users")
@@ -21,6 +27,14 @@ public class UserController {
 
     private IUserService userService;
 
+    @Operation(
+            summary = "Create User API",
+            description = "Use This Endpoint to create new user"
+    )
+    @ApiResponse(
+            responseCode = "201",
+            description = "HTTP STATUS CODE 201 CREATED"
+    )
     @PostMapping
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto user) {
         UserDto savedUser = userService.createUser(user);
@@ -28,17 +42,42 @@ public class UserController {
         return  new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
+    @Operation(
+            summary = "Get User By Id API",
+            description = "Use This Endpoint to get user by Id"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP STATUS CODE 200 OK"
+    )
     @GetMapping("{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
         UserDto user = userService.getUserById(id);
         return  ResponseEntity.ok(user);
     }
+
+    @Operation(
+            summary = "Get All Users API",
+            description = "Use This Endpoint to Get All users"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP STATUS CODE 200 OK"
+    )
     @GetMapping
     public ResponseEntity<List<UserDto>> getAllUsers() {
         List<UserDto> users = userService.getAllUsers();
         return  ResponseEntity.ok(users);
     }
 
+    @Operation(
+            summary = "Update User API",
+            description = "Use This Endpoint to Update user"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP STATUS CODE 200 OK"
+    )
     @PutMapping("{id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable Long id,@Valid @RequestBody UserDto user) {
         user.setId(id);
@@ -46,6 +85,14 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
+    @Operation(
+            summary = "Delete User API",
+            description = "Use This Endpoint to delete user"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "HTTP STATUS CODE 200 OK"
+    )
     @DeleteMapping("{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
         boolean isDeleted = userService.deleteUserById(id);
